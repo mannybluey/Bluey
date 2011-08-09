@@ -13,7 +13,8 @@ BodyPart.create(
     {:name => 'Left Leg', :x => 82, :y => 325},
     {:name => 'Right Leg', :x => 160, :y => 325},
     {:name => 'Waist', :x => 125, :y => 205},
-    {:name => 'Chest', :x => 125, :y => 125}
+    {:name => 'Chest', :x => 125, :y => 125},
+    {:name => 'General', :x => 125, :y => 50}
   ]
 )
 

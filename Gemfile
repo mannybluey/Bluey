@@ -53,4 +53,5 @@ group :development, :test do
   gem 'autotest'
   gem 'culerity'
   gem 'celerity', :require => nil
+  gem 'ruby-debug19', :require => 'ruby-debug'
 end
