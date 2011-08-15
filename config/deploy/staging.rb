@@ -19,17 +19,14 @@ set :domain, "blueyfit.com"
 ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
 
-$:.unshift(File.expand_path('./lib', ENV['rvm_path']))
-require "rvm/capistrano"
-set :rvm_ruby_string, 'ruby-1.9.2-p180'
-set :rvm_type, :user
+set :deploy_to, "/home/#{user}/#{application}/staging"
+set :rails_env, "test"
 
-
-#set :default_environment, {
-  #'PATH' => '/home/blueybot/.rvm/gems/ruby-1.9.2-p180/bin:$PATH',
-  #'GEM_HOME' => '/home/blueybot/.rvm/gems/ruby-1.9.2-p180',
-  #'GEM_PATH' => '/home/blueybot/.rvm/gems/ruby-1.9.2-p180'
-#}
+set :default_environment, {
+  'PATH' => '/home/blueybot/.rvm/gems/ruby-1.9.2-p180/bin:$PATH',
+  'GEM_HOME' => '/home/blueybot/.rvm/gems/ruby-1.9.2-p180',
+  'GEM_PATH' => '/home/blueybot/.rvm/gems/ruby-1.9.2-p180'
+}
 
 role :web, domain                          # Your HTTP server, Apache/etc
 role :app, domain                          # This may be the same as your `Web` server
@@ -47,6 +44,16 @@ namespace :deploy do
   [:start, :stop].each do |t|
     desc "#{t} task is a no-op with mod_rails"
     task t, :roles => :app do ; end
+  end
+  
+  task :cold do       # Overriding the default deploy:cold
+    update
+    load_schema       # My own step, replacing migrations.
+    start
+  end
+
+  task :load_schema, :roles => :app do
+    run "cd #{current_path}; rake db:seed"
   end
   
   task :symlink_shared do
